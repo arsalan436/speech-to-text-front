@@ -1,14 +1,17 @@
-import React, { useRef, useState } from 'react'
-import Navbar from './Navbar'
+import React, { useRef, useState } from 'react';
+import Navbar from './Navbar';
+import axios from 'axios';
 
 const CreateNote = () => {
-
-    const [isRecording, setIsRecording] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState('');
   const [title, setTitle] = useState('');
-  const [transcription, setTranscription] = useState(''); // ⬅️ for showing transcript
+  const [transcription, setTranscription] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
+  const recordedAudioBlob = useRef(null); // to store latest audio blob
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -20,11 +23,11 @@ const CreateNote = () => {
 
     mediaRecorderRef.current.onstop = () => {
       const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' });
+      recordedAudioBlob.current = audioBlob;
       const url = URL.createObjectURL(audioBlob);
       setAudioURL(url);
       audioChunks.current = [];
-      // 🔴 Dummy transcript for now (you’ll replace with API response)
-      setTranscription("Transcription will appear here after processing...");
+      handleUpload(audioBlob); // ✅ send to backend
     };
 
     mediaRecorderRef.current.start();
@@ -36,33 +39,95 @@ const CreateNote = () => {
     setIsRecording(false);
   };
 
+  const handleUpload = async (blobOrFile) => {
+    const formData = new FormData();
+    formData.append('audio', blobOrFile);
+
+    try {
+      setLoading(true);
+      setTranscription('');
+      const res = await axios.post('http://localhost:5000/api/note/transcribe', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setTranscription(res.data.transcription || 'No transcription received.');
+    } catch (err) {
+      console.error(err);
+      setTranscription('Error occurred during transcription.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveNote = async () => {
+  if (!transcription) {
+    alert('No transcription available to save.');
+    return;
+  }
+
+  const noteTitle = title.trim() === '' ? 'Untitled Note' : title;
+
+  try {
+    // Send to backend or log to console
+    const noteData = {
+      user_id: 'your-supabase-user-id',  // Replace with real user ID (see below)
+      title: noteTitle,
+      transcription,
+
+    };
+
+    console.log('Saving note:', noteData);
+
+    // Optional: POST to backend
+    /*
+    await axios.post('http://localhost:5000/api/save-note', noteData);
+    */
+
+    alert('Note saved successfully!');
+    setTitle('');
+    setTranscription('');
+    setAudioURL('');
+  } catch (err) {
+    console.error(err);
+    alert('Failed to save note.');
+  }
+};
+
+
   return (
     <div>
-        <Navbar/>
+      <Navbar />
       <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 border border-gray-200">
-      {/* <h2 className="text-xl font-semibold mb-2">My Note Title</h2> */}
-      <input
+        <input
           type="text"
           placeholder="Enter your note title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-      <p className="text-gray-700 mb-4">
-        
-      </p>
-      {transcription && (
-            <div className="my-4 p-4 bg-gray-100 border border-gray-300 rounded-lg text-gray-800">
-              <h3 className="text-md font-semibold mb-1">Transcription:</h3>
-              <p>{transcription}</p>
-            </div>
-          )}
 
-      <div className="flex justify-end space-x-3">
-        <button onClick={() => document.getElementById('fileInput').click()} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition">
-          Upload Audo File
-        </button>
-        <input
+        {transcription && (
+          <div className="my-4 p-4 bg-gray-100 border border-gray-300 rounded-lg text-gray-800">
+            <h3 className="text-md font-semibold mb-1">Transcription:</h3>
+            <p>{transcription}</p>
+            <button onClick={handleSaveNote} className="px-4 py-2 mt-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition">Save</button>
+          </div>
+        )}
+
+        {loading && (
+          <p className="text-blue-600 font-medium text-sm mb-3">Processing audio...</p>
+        )}
+
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={() => document.getElementById('fileInput').click()}
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition"
+          >
+            Upload
+          </button>
+          <input
             type="file"
             id="fileInput"
             accept="audio/*"
@@ -72,28 +137,25 @@ const CreateNote = () => {
               if (file) {
                 const url = URL.createObjectURL(file);
                 setAudioURL(url);
-                // 🔴 Dummy text — replace this with transcription logic
-                setTranscription("Transcript for uploaded audio will go here.");
+                handleUpload(file); // ✅ send uploaded file
               }
             }}
           />
 
-        <button
+          <button
             className={`px-4 py-2 ${isRecording ? 'bg-gray-500' : 'bg-red-500 hover:bg-red-600'} text-white font-medium rounded-lg transition`}
             onClick={isRecording ? stopRecording : startRecording}
           >
             {isRecording ? 'Stop Recording' : 'Speak'}
           </button>
+        </div>
 
-          {audioURL && (
-            <audio controls src={audioURL} className="mt-4" />
-          )}
-                    {/* 📝 Transcription Display Area */}
-          
+        {audioURL && (
+          <audio controls src={audioURL} className="mt-4 w-full" />
+        )}
       </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default CreateNote
+export default CreateNote;
