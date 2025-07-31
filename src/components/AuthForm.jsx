@@ -69,7 +69,7 @@ const handleSubmit = async (e) => {
 };
 
 return (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white px-4 py-2">
+  <div className="min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white px-4 py-2">
     <div className="w-full max-w-md bg-[#1e293b] shadow-2xl rounded-2xl p-8 border border-slate-700 transition-transform duration-300 hover:scale-[1.01]">
       <h2 className="text-2xl font-bold mb-6 text-center text-indigo-300">
         {isLogin ? "Login to Your Account" : "Create a New Account"}

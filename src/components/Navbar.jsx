@@ -51,7 +51,7 @@ return (
         {user && (
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-medium rounded-lg shadow hover:scale-105 hover:ring-2 hover:ring-gray-400 transition-all duration-300 cursor-pointer"
+            className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-700 text-white font-medium rounded-lg shadow hover:scale-105 hover:ring-2 hover:ring-gray-400 transition-all duration-300 cursor-pointer"
           >
             Logout
           </button>
