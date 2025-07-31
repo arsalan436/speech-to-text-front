@@ -47,6 +47,12 @@ It will run at http://localhost:5173 (or similar).
 
     After logging in, user info is used to save and fetch their data.
 
-✅ To-Do
+## Deployment
 
-    Add deployment instructions once deployed (coming soon).
+I deployed the frontend of this project using Netlify.
+
+To do this, I logged into Netlify and clicked on “Create a new site”. Since I wanted to deploy directly from GitHub, I connected my GitHub account with Netlify. After that, I selected the specific repository for this project.
+
+Netlify automatically detected the build settings (in my case, the build command and output folder). After confirming everything, I deployed the app.
+
+Once the deployment was successful, Netlify provided me with a live URL, which is now used as the frontend of this project.
