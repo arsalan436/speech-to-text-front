@@ -14,18 +14,7 @@ const CreateNote = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
   const recordedAudioBlob = useRef(null);
-  // const [currentUser, setCurrentUser] = useState(null);
 
-// useEffect(() => {
-//   const getUser = async () => {
-//     const { data: { user }, error } = await supabase.auth.getUser();
-//     if (user && !error) {
-//       setCurrentUser(user);
-//     }
-//   };
-
-//   getUser();
-// }, []);
 
 const { user: currentUser } = useContext(AuthContext);
  // to store latest audio blob
@@ -113,65 +102,79 @@ const { user: currentUser } = useContext(AuthContext);
 };
 
 
-  return (
-    <div>
-      <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 border border-gray-200">
-        <input
-          type="text"
-          placeholder="Enter your note title..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+return (
+  <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
+    <div className="max-w-md mx-auto mt-10 bg-gradient-to-tr from-[#1e293b] to-[#334155] shadow-2xl rounded-2xl p-6 border border-gray-600">
 
-        {transcription && (
-          <div className="my-4 p-4 bg-gray-100 border border-gray-300 rounded-lg text-gray-800">
-            <h3 className="text-md font-semibold mb-1">Transcription:</h3>
-            <p>{transcription}</p>
-            <button onClick={handleSaveNote} className="px-4 py-2 mt-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition">Save</button>
-          </div>
-        )}
+      <input
+        type="text"
+        placeholder="Enter your note title..."
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="w-full px-4 py-2 mb-4 rounded-md bg-slate-800 text-white border border-slate-600 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
 
-        {loading && (
-          <p className="text-blue-600 font-medium text-sm mb-3">Processing audio...</p>
-        )}
-
-        <div className="flex justify-end space-x-3">
+      {transcription && (
+        <div className="my-4 p-4 bg-slate-800 border border-slate-600 rounded-lg text-slate-200">
+          <h3 className="text-md font-semibold mb-1 text-indigo-300">Transcription:</h3>
+          <p>{transcription}</p>
           <button
-            onClick={() => document.getElementById('fileInput').click()}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition"
+            onClick={handleSaveNote}
+            className="px-4 py-2 mt-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition duration-150 ease-in-out shadow hover:scale-105"
           >
-            Upload
-          </button>
-          <input
-            type="file"
-            id="fileInput"
-            accept="audio/*"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                const url = URL.createObjectURL(file);
-                setAudioURL(url);
-                handleUpload(file); // ✅ send uploaded file
-              }
-            }}
-          />
-
-          <button
-            className={`px-4 py-2 ${isRecording ? 'bg-gray-500' : 'bg-red-500 hover:bg-red-600'} text-white font-medium rounded-lg transition`}
-            onClick={isRecording ? stopRecording : startRecording}
-          >
-            {isRecording ? 'Stop Recording' : 'Speak'}
+            Save
           </button>
         </div>
+      )}
 
-        {audioURL && (
-          <audio controls src={audioURL} className="mt-4 w-full" />
-        )}
+      {loading && (
+        <p className="text-indigo-300 font-medium text-sm mb-3">Processing audio...</p>
+      )}
+
+      <div className="flex justify-end space-x-3">
+        {/* Upload Button */}
+        <button
+          onClick={() => document.getElementById('fileInput').click()}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-150 ease-in-out shadow-lg hover:scale-105 hover:shadow-blue-400/50"
+        >
+          Upload
+        </button>
+        <input
+          type="file"
+          id="fileInput"
+          accept="audio/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const url = URL.createObjectURL(file);
+              setAudioURL(url);
+              handleUpload(file);
+            }
+          }}
+        />
+
+        {/* Speak / Stop Button */}
+        <button
+          className={`px-4 py-2 ${
+            isRecording
+              ? 'bg-gray-600 hover:bg-gray-700'
+              : 'bg-red-600 hover:bg-red-700 hover:shadow-red-500/50'
+          } text-white font-semibold rounded-lg transition duration-150 ease-in-out shadow-lg hover:scale-105`}
+          onClick={isRecording ? stopRecording : startRecording}
+        >
+          {isRecording ? 'Stop Recording' : 'Speak'}
+        </button>
       </div>
+
+      {audioURL && (
+        <audio controls src={audioURL} className="mt-4 w-full rounded-md overflow-hidden" />
+      )}
     </div>
-  );
+  </div>
+);
+
+
 };
 
 export default CreateNote;

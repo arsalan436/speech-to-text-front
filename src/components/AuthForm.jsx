@@ -68,64 +68,67 @@ const handleSubmit = async (e) => {
   }
 };
 
-  return (
-    <div>
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
-      <h2 className="text-2xl font-semibold mb-4 text-center">
+return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white px-4 py-2">
+    <div className="w-full max-w-md bg-[#1e293b] shadow-2xl rounded-2xl p-8 border border-slate-700 transition-transform duration-300 hover:scale-[1.01]">
+      <h2 className="text-2xl font-bold mb-6 text-center text-indigo-300">
         {isLogin ? "Login to Your Account" : "Create a New Account"}
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {!isLogin && (
           <div>
-            <label className="block mb-1 font-medium">Username</label>
+            <label className="block mb-1 text-slate-300 font-medium">Username</label>
             <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full bg-slate-800 text-white border border-slate-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-400"
+              placeholder="Enter your username"
               required
             />
           </div>
         )}
         <div>
-          <label className="block mb-1 font-medium">Email</label>
+          <label className="block mb-1 text-slate-300 font-medium">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full bg-slate-800 text-white border border-slate-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-400"
+            placeholder="Enter your email"
             required
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Password</label>
+          <label className="block mb-1 text-slate-300 font-medium">Password</label>
           <input
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full bg-slate-800 text-white border border-slate-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-400"
+            placeholder="Enter your password"
             required
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg shadow-lg transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-indigo-400/50"
         >
           {isLogin ? "Login" : "Sign Up"}
         </button>
       </form>
 
-      <p className="mt-4 text-center text-gray-600">
+      <p className="mt-6 text-center text-slate-400 text-sm">
         {isLogin ? (
           <>
             Don't have an account?{" "}
             <button
-              className="text-blue-500 hover:underline font-medium"
+              className="text-sky-400 hover:underline font-medium"
               onClick={() => setIsLogin(false)}
             >
               Sign Up
@@ -135,7 +138,7 @@ const handleSubmit = async (e) => {
           <>
             Already have an account?{" "}
             <button
-              className="text-blue-500 hover:underline font-medium"
+              className="text-sky-400 hover:underline font-medium"
               onClick={() => setIsLogin(true)}
             >
               Login
@@ -144,8 +147,12 @@ const handleSubmit = async (e) => {
         )}
       </p>
     </div>
-    </div>
-  );
+  </div>
+);
+
+
+
+
   
 };
 
