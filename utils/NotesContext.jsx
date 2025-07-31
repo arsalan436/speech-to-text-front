@@ -9,11 +9,13 @@ export const NotesProvider = ({ children }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const API_BASE_URL = process.env.VITE_APP_API_BASE_URL;
+
   const fetchNotes = async () => {
     if (!user) return;
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/note/user-notes/${user.id}`);
+      const res = await axios.get(`${API_BASE_URL}/api/note/user-notes/${user.id}`);
       setNotes(res.data);
     } catch (err) {
       console.error("Failed to fetch notes:", err);
@@ -37,7 +39,7 @@ export const NotesProvider = ({ children }) => {
         )
       );
 
-      await axios.put(`http://localhost:5000/api/note/update/${id}`, updatedData);
+      await axios.put(`${API_BASE_URL}/api/note/update/${id}`, updatedData);
     } catch (error) {
       console.error("Failed to update note:", error);
     }
@@ -48,7 +50,7 @@ export const NotesProvider = ({ children }) => {
       // Local UI update
       setNotes((prev) => prev.filter((note) => note.id !== id));
 
-      await axios.delete(`http://localhost:5000/api/note/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/note/delete/${id}`);
     } catch (error) {
       console.error("Failed to delete note:", error);
     }

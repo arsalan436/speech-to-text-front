@@ -15,6 +15,7 @@ const CreateNote = () => {
   const audioChunks = useRef([]);
   const recordedAudioBlob = useRef(null);
 
+  const API_BASE_URL = process.env.VITE_APP_API_BASE_URL;
 
 const { user: currentUser } = useContext(AuthContext);
  // to store latest audio blob
@@ -52,7 +53,7 @@ const { user: currentUser } = useContext(AuthContext);
     try {
       setLoading(true);
       setTranscription('');
-      const res = await axios.post('http://localhost:5000/api/note/transcribe', formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/note/transcribe`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -82,7 +83,7 @@ const { user: currentUser } = useContext(AuthContext);
 
   try {
     // Send to backend or log to console
-    const noteData = await axios.post('http://localhost:5000/api/note/save-note', {
+    const noteData = await axios.post(`${API_BASE_URL}/api/note/save-note`, {
       user_id: currentUser?.id,           // Get from Supabase Auth
       title: noteTitle,
       transcription,
